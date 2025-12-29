@@ -13,7 +13,7 @@ func NewBlockchain() *Blockchain {
 	}
 }
 
-// ✅ FIX: interface{} → []Transaction
+
 func (bc *Blockchain) AddBlock(txs []Transaction) Block {
 	bc.mu.Lock()
 	defer bc.mu.Unlock()

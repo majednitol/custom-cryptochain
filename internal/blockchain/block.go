@@ -54,7 +54,6 @@ func MineBlock(last Block, data []Transaction) Block {
 
 		hash = crypto.Hash(blockBytes)
 
-		// ✅ FIXED PoW condition
 		if strings.HasPrefix(hash, strings.Repeat("0", difficulty)) {
 			break
 		}
