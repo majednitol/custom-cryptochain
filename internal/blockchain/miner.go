@@ -6,7 +6,12 @@ type Miner struct {
 	Mempool *Mempool
 }
 
-func (m *Miner) Mine() Block {
+func (m *Miner) Mine() *Block {
 	txs := m.Mempool.Flush()
-	return m.Chain.AddBlock(txs)
+	if len(txs) == 0 {
+		// Nothing to mine
+		return nil
+	}
+	block := m.Chain.AddBlock(txs)
+	return &block
 }

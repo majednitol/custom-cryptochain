@@ -8,7 +8,9 @@ type Mempool struct {
 }
 
 func NewMempool() *Mempool {
-	return &Mempool{}
+	return &Mempool{
+		Transactions: []Transaction{},
+	}
 }
 
 func (m *Mempool) Add(tx Transaction) {
@@ -20,8 +22,11 @@ func (m *Mempool) Add(tx Transaction) {
 func (m *Mempool) Flush() []Transaction {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-
 	txs := m.Transactions
-	m.Transactions = nil
+	if txs == nil {
+		txs = []Transaction{}
+	}
+
+	m.Transactions = []Transaction{}
 	return txs
 }

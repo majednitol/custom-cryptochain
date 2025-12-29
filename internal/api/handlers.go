@@ -10,6 +10,7 @@ import (
 func RegisterHandlers(
 	bc *blockchain.Blockchain,
 	mempool *blockchain.Mempool,
+	miner *blockchain.Miner,
 ) {
 	http.HandleFunc("/blocks", func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(bc.Chain)
@@ -29,7 +30,14 @@ func RegisterHandlers(
 		json.NewEncoder(w).Encode(mempool.Transactions)
 	})
 	http.HandleFunc("/mine", func(w http.ResponseWriter, r *http.Request) {
-		block := bc.AddBlock(mempool.Flush())
-		json.NewEncoder(w).Encode(block)
-	})
+	block := miner.Mine() // miner.Mine() returns nil if empty
+
+	if block == nil {
+		http.Error(w, "No transactions to mine", http.StatusBadRequest)
+		return
+	}
+
+	json.NewEncoder(w).Encode(block)
+})
+
 }

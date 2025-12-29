@@ -11,8 +11,13 @@ import (
 func main() {
 	bc := blockchain.NewBlockchain()
 	mempool := blockchain.NewMempool() 
+		miner := &blockchain.Miner{
+		Chain:   bc,
+		Mempool: mempool,
+	}
 
-	api.RegisterHandlers(bc, mempool) 
+
+	api.RegisterHandlers(bc, mempool, miner) 
 
 	log.Println(" Node running on :3000")
 	log.Fatal(http.ListenAndServe(":3000", nil))
