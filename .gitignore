@@ -1,0 +1,23 @@
+# Node binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Build output
+/bin/
+/build/
+/dist/
+
+# LevelDB / blockchain data
+cmd/node/data/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

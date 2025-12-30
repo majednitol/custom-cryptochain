@@ -6,19 +6,32 @@ import (
 
 	"blockchain/internal/api"
 	"blockchain/internal/blockchain"
+	"blockchain/internal/persistence"
 )
 
 func main() {
-	bc := blockchain.NewBlockchain()
-	mempool := blockchain.NewMempool() 
-		miner := &blockchain.Miner{
+	// Open LevelDB
+	db, err := persistence.Open("data/leveldb")
+	if err != nil {
+		log.Fatal("Failed to open LevelDB:", err)
+	}
+
+	// Initialize blockchain with DB
+	bc := blockchain.NewBlockchain(db)
+
+	// Initialize mempool and UTXO set with DB
+	mempool := blockchain.NewMempool(db)
+	utxo := blockchain.NewUTXOSet(db)
+
+	// Miner
+	miner := &blockchain.Miner{
 		Chain:   bc,
 		Mempool: mempool,
 	}
 
+	// API
+	api.RegisterHandlers(bc, mempool, miner, utxo)
 
-	api.RegisterHandlers(bc, mempool, miner) 
-
-	log.Println(" Node running on :3000")
+	log.Println("🚀 Node running on :3000")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
